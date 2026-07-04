@@ -489,7 +489,6 @@
     toggleBtn.addEventListener('click', function () {
       var isOpen = panel.style.display !== 'none';
       panel.style.display = isOpen ? 'none' : 'flex';
-      if (!isOpen) input.focus();
     });
 
     function addMessage(text, who) {
