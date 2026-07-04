@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <title>Sortu AI — Automatización inteligente para tu negocio</title>
 <style>
   :root{
@@ -504,8 +504,18 @@
     var sessionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
     var sending = false;
 
+    function fitOverlayToViewport() {
+      if (window.visualViewport) {
+        overlay.style.height = window.visualViewport.height + 'px';
+      }
+    }
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', fitOverlayToViewport);
+    }
+
     toggleBtn.addEventListener('click', function () {
       overlay.classList.add('open');
+      fitOverlayToViewport();
     });
     closeBtn.addEventListener('click', function () {
       overlay.classList.remove('open');
