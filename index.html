@@ -199,10 +199,15 @@
 
   #sortu-chat-overlay{
     position:fixed;inset:0;z-index:300;
-    background:var(--bg);
-    display:none;flex-direction:column;
+    background:var(--bg-soft);
+    display:none;justify-content:center;
   }
   #sortu-chat-overlay.open{display:flex;}
+  .chat-overlay-inner{
+    width:100%;max-width:480px;
+    display:flex;flex-direction:column;
+    background:var(--bg);
+  }
   .chat-overlay-header{
     padding:16px 18px;border-bottom:1px solid var(--line);
     display:flex;align-items:center;justify-content:space-between;
@@ -439,16 +444,18 @@
 </section>
 
 <div id="sortu-chat-overlay">
-  <div class="chat-overlay-header">
-    <span><span class="dot"></span>Asistente Sortu AI</span>
-    <button class="chat-close" id="sortu-chat-close" aria-label="Cerrar chat">×</button>
-  </div>
-  <div class="chat-messages" id="sortu-chat-messages">
-    <div class="chat-msg bot">Hola 👋 Soy el asistente de Sortu AI. Cuéntame, ¿qué te gustaría automatizar?</div>
-  </div>
-  <div class="chat-input-row">
-    <input type="text" id="sortu-chat-input" placeholder="Escribe tu mensaje..." autocomplete="off">
-    <button id="sortu-chat-send">Enviar</button>
+  <div class="chat-overlay-inner">
+    <div class="chat-overlay-header">
+      <span><span class="dot"></span>Asistente Sortu AI</span>
+      <button class="chat-close" id="sortu-chat-close" aria-label="Cerrar chat">×</button>
+    </div>
+    <div class="chat-messages" id="sortu-chat-messages">
+      <div class="chat-msg bot">Hola 👋 Soy el asistente de Sortu AI. Cuéntame, ¿qué te gustaría automatizar?</div>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="sortu-chat-input" placeholder="Escribe tu mensaje..." autocomplete="off">
+      <button id="sortu-chat-send">Enviar</button>
+    </div>
   </div>
 </div>
 
