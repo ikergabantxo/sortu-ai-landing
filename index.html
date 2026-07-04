@@ -193,40 +193,46 @@
   #demo-call-status.ok{color:var(--mint-bright);}
   #demo-call-status.err{color:#ff6b6b;}
 
-  /* CHAT INLINE (dentro del flujo de la página, no flotante) */
+  /* CHAT — botón + pantalla completa al abrir */
   .chat-toggle-btn{margin:0 auto;}
   .chat-toggle-btn .icon{font-size:20px;}
-  .chat-inline{
-    max-width:520px;margin:24px auto 0;text-align:left;
-    display:flex;flex-direction:column;overflow:hidden;
-    border-radius:16px;border:1px solid var(--line);
+
+  #sortu-chat-overlay{
+    position:fixed;inset:0;z-index:300;
+    background:var(--bg);
+    display:none;flex-direction:column;
   }
-  .chat-inline .chat-header{
-    padding:14px 18px;border-bottom:1px solid var(--line);
-    display:flex;align-items:center;font-weight:700;font-size:15px;
-    background:var(--panel);
+  #sortu-chat-overlay.open{display:flex;}
+  .chat-overlay-header{
+    padding:16px 18px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+    font-weight:700;font-size:16px;background:var(--panel);
+    flex-shrink:0;
   }
-  .chat-inline .dot{width:8px;height:8px;border-radius:50%;background:var(--mint-bright);box-shadow:0 0 8px var(--mint-bright);display:inline-block;margin-right:8px;}
-  .chat-inline .chat-messages{
-    height:360px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;
+  .chat-overlay-header .dot{width:8px;height:8px;border-radius:50%;background:var(--mint-bright);box-shadow:0 0 8px var(--mint-bright);display:inline-block;margin-right:8px;}
+  .chat-close{background:none;border:none;color:var(--text-dim);font-size:28px;cursor:pointer;line-height:1;padding:0 6px;}
+  .chat-close:hover{color:var(--text);}
+  #sortu-chat-overlay .chat-messages{
+    flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;
     background:var(--bg-soft);
   }
   .chat-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.4;}
   .chat-msg.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line);color:var(--text);}
   .chat-msg.user{align-self:flex-end;background:var(--mint);color:#06120E;}
-  .chat-inline .chat-input-row{
+  #sortu-chat-overlay .chat-input-row{
     display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:var(--panel);
+    flex-shrink:0;
   }
-  .chat-inline .chat-input-row input{
+  #sortu-chat-overlay .chat-input-row input{
     flex:1;background:var(--bg-soft);border:1px solid var(--line);color:var(--text);
     padding:10px 14px;border-radius:8px;font-size:14px;font-family:inherit;
   }
-  .chat-inline .chat-input-row input:focus{outline:none;border-color:var(--mint);}
-  .chat-inline .chat-input-row button{
+  #sortu-chat-overlay .chat-input-row input:focus{outline:none;border-color:var(--mint);}
+  #sortu-chat-overlay .chat-input-row button{
     background:var(--mint);color:#06120E;border:none;border-radius:8px;
     padding:0 16px;font-weight:700;cursor:pointer;font-family:inherit;
   }
-  .chat-inline .chat-input-row button:hover{background:var(--mint-bright);}
+  #sortu-chat-overlay .chat-input-row button:hover{background:var(--mint-bright);}
 
   /* CTA FINAL */
   .final-cta{
@@ -428,19 +434,23 @@
         <span class="icon">💬</span>
         <span>Prueba nuestro chatbot</span>
       </button>
-      <div class="chat-inline" id="sortu-chat-panel" style="display:none;">
-        <div class="chat-header"><span class="dot"></span>Asistente Sortu AI</div>
-        <div class="chat-messages" id="sortu-chat-messages">
-          <div class="chat-msg bot">Hola 👋 Soy el asistente de Sortu AI. Cuéntame, ¿qué te gustaría automatizar?</div>
-        </div>
-        <div class="chat-input-row">
-          <input type="text" id="sortu-chat-input" placeholder="Escribe tu mensaje..." autocomplete="off">
-          <button id="sortu-chat-send">Enviar</button>
-        </div>
-      </div>
     </div>
   </div>
 </section>
+
+<div id="sortu-chat-overlay">
+  <div class="chat-overlay-header">
+    <span><span class="dot"></span>Asistente Sortu AI</span>
+    <button class="chat-close" id="sortu-chat-close" aria-label="Cerrar chat">×</button>
+  </div>
+  <div class="chat-messages" id="sortu-chat-messages">
+    <div class="chat-msg bot">Hola 👋 Soy el asistente de Sortu AI. Cuéntame, ¿qué te gustaría automatizar?</div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="sortu-chat-input" placeholder="Escribe tu mensaje..." autocomplete="off">
+    <button id="sortu-chat-send">Enviar</button>
+  </div>
+</div>
 
 <section class="final-cta" id="contacto">
   <div class="wrap">
@@ -479,7 +489,8 @@
 <script>
   (function () {
     var toggleBtn = document.getElementById('sortu-chat-toggle');
-    var panel = document.getElementById('sortu-chat-panel');
+    var overlay = document.getElementById('sortu-chat-overlay');
+    var closeBtn = document.getElementById('sortu-chat-close');
     var messages = document.getElementById('sortu-chat-messages');
     var input = document.getElementById('sortu-chat-input');
     var sendBtn = document.getElementById('sortu-chat-send');
@@ -487,8 +498,10 @@
     var sending = false;
 
     toggleBtn.addEventListener('click', function () {
-      var isOpen = panel.style.display !== 'none';
-      panel.style.display = isOpen ? 'none' : 'flex';
+      overlay.classList.add('open');
+    });
+    closeBtn.addEventListener('click', function () {
+      overlay.classList.remove('open');
     });
 
     function addMessage(text, who) {
