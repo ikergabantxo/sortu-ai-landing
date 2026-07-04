@@ -193,61 +193,38 @@
   #demo-call-status.ok{color:var(--mint-bright);}
   #demo-call-status.err{color:#ff6b6b;}
 
-  /* CHAT WIDGET */
-  #sortu-chat-bubble{
-    position:fixed;bottom:24px;right:24px;z-index:200;
-    height:56px;padding:0 22px 0 18px;border-radius:100px;
-    background:var(--mint);color:#06120E;
-    display:flex;align-items:center;gap:10px;
-    font-size:15px;font-weight:700;font-family:inherit;
-    cursor:pointer;border:none;white-space:nowrap;
-    box-shadow:0 8px 24px rgba(61,220,176,0.35);
-    transition:transform .15s ease, background .15s ease;
+  /* CHAT INLINE (dentro del flujo de la página, no flotante) */
+  .chat-inline{
+    max-width:520px;margin:0 auto;text-align:left;
+    display:flex;flex-direction:column;overflow:hidden;
+    border-radius:16px;border:1px solid var(--line);
   }
-  #sortu-chat-bubble .icon{font-size:22px;}
-  #sortu-chat-bubble:hover{background:var(--mint-bright);transform:translateY(-2px);}
-  #sortu-chat-panel{
-    position:fixed;bottom:98px;right:24px;z-index:200;
-    width:340px;max-width:calc(100vw - 32px);height:460px;max-height:calc(100vh - 140px);
-    background:var(--panel);border:1px solid var(--line);border-radius:16px;
-    display:none;flex-direction:column;overflow:hidden;
-    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  .chat-inline .chat-header{
+    padding:14px 18px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;font-weight:700;font-size:15px;
+    background:var(--panel);
   }
-  #sortu-chat-panel.open{display:flex;}
-  .chat-header{
-    padding:16px 18px;border-bottom:1px solid var(--line);
-    display:flex;align-items:center;justify-content:space-between;
-    font-weight:700;font-size:15px;
-  }
-  .chat-header .dot{width:8px;height:8px;border-radius:50%;background:var(--mint-bright);box-shadow:0 0 8px var(--mint-bright);display:inline-block;margin-right:8px;}
-  .chat-close{background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;line-height:1;}
-  .chat-close:hover{color:var(--text);}
-  .chat-messages{
-    flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;
+  .chat-inline .dot{width:8px;height:8px;border-radius:50%;background:var(--mint-bright);box-shadow:0 0 8px var(--mint-bright);display:inline-block;margin-right:8px;}
+  .chat-inline .chat-messages{
+    height:360px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;
+    background:var(--bg-soft);
   }
   .chat-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.4;}
-  .chat-msg.bot{align-self:flex-start;background:var(--bg-soft);border:1px solid var(--line);color:var(--text);}
+  .chat-msg.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line);color:var(--text);}
   .chat-msg.user{align-self:flex-end;background:var(--mint);color:#06120E;}
-  .chat-typing{align-self:flex-start;color:var(--text-dim);font-size:13px;font-style:italic;padding:0 4px;}
-  .chat-input-row{
-    display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);
+  .chat-inline .chat-input-row{
+    display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:var(--panel);
   }
-  .chat-input-row input{
+  .chat-inline .chat-input-row input{
     flex:1;background:var(--bg-soft);border:1px solid var(--line);color:var(--text);
     padding:10px 14px;border-radius:8px;font-size:14px;font-family:inherit;
   }
-  .chat-input-row input:focus{outline:none;border-color:var(--mint);}
-  .chat-input-row button{
+  .chat-inline .chat-input-row input:focus{outline:none;border-color:var(--mint);}
+  .chat-inline .chat-input-row button{
     background:var(--mint);color:#06120E;border:none;border-radius:8px;
     padding:0 16px;font-weight:700;cursor:pointer;font-family:inherit;
   }
-  .chat-input-row button:hover{background:var(--mint-bright);}
-
-  @media (max-width:480px){
-    #sortu-chat-panel{right:16px;bottom:88px;}
-    #sortu-chat-bubble{right:16px;bottom:16px;height:50px;padding:0 18px 0 14px;font-size:13px;}
-    #sortu-chat-bubble .icon{font-size:18px;}
-  }
+  .chat-inline .chat-input-row button:hover{background:var(--mint-bright);}
 
   /* CTA FINAL */
   .final-cta{
@@ -439,6 +416,26 @@
   </div>
 </section>
 
+<section id="chatbot-section">
+  <div class="wrap">
+    <div class="demo-call">
+      <div class="tag">O escríbenos</div>
+      <h2 style="margin-top:10px;font-size:clamp(24px,3vw,32px);">Prueba nuestro chatbot ahora</h2>
+      <p style="color:var(--text-dim);max-width:480px;margin:14px auto 24px;font-size:16px;">Habla directamente con el asistente de Sortu AI y descubre qué podemos automatizar en tu negocio.</p>
+      <div class="chat-inline">
+        <div class="chat-header"><span class="dot"></span>Asistente Sortu AI</div>
+        <div class="chat-messages" id="sortu-chat-messages">
+          <div class="chat-msg bot">Hola 👋 Soy el asistente de Sortu AI. Cuéntame, ¿qué te gustaría automatizar?</div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" id="sortu-chat-input" placeholder="Escribe tu mensaje..." autocomplete="off">
+          <button id="sortu-chat-send">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="final-cta" id="contacto">
   <div class="wrap">
     <h2>Empieza a automatizar tu negocio hoy</h2>
@@ -473,43 +470,13 @@
   </div>
 </footer>
 
-
-<button id="sortu-chat-bubble" aria-label="Abrir chat">
-  <span class="icon">💬</span>
-  <span>Prueba nuestro chatbot</span>
-</button>
-<div id="sortu-chat-panel">
-  <div class="chat-header">
-    <span><span class="dot"></span>Asistente Sortu AI</span>
-    <button class="chat-close" id="sortu-chat-close" aria-label="Cerrar chat">×</button>
-  </div>
-  <div class="chat-messages" id="sortu-chat-messages">
-    <div class="chat-msg bot">Hola 👋 Soy el asistente de Sortu AI. Cuéntame, ¿qué te gustaría automatizar?</div>
-  </div>
-  <div class="chat-input-row">
-    <input type="text" id="sortu-chat-input" placeholder="Escribe tu mensaje..." autocomplete="off">
-    <button id="sortu-chat-send">Enviar</button>
-  </div>
-</div>
-
 <script>
   (function () {
-    var bubble = document.getElementById('sortu-chat-bubble');
-    var panel = document.getElementById('sortu-chat-panel');
-    var closeBtn = document.getElementById('sortu-chat-close');
     var messages = document.getElementById('sortu-chat-messages');
     var input = document.getElementById('sortu-chat-input');
     var sendBtn = document.getElementById('sortu-chat-send');
     var sessionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
     var sending = false;
-
-    bubble.addEventListener('click', function () {
-      panel.classList.toggle('open');
-      if (panel.classList.contains('open')) input.focus();
-    });
-    closeBtn.addEventListener('click', function () {
-      panel.classList.remove('open');
-    });
 
     function addMessage(text, who) {
       var div = document.createElement('div');
