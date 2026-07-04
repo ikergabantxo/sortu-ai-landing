@@ -194,8 +194,10 @@
   #demo-call-status.err{color:#ff6b6b;}
 
   /* CHAT INLINE (dentro del flujo de la página, no flotante) */
+  .chat-toggle-btn{margin:0 auto;}
+  .chat-toggle-btn .icon{font-size:20px;}
   .chat-inline{
-    max-width:520px;margin:0 auto;text-align:left;
+    max-width:520px;margin:24px auto 0;text-align:left;
     display:flex;flex-direction:column;overflow:hidden;
     border-radius:16px;border:1px solid var(--line);
   }
@@ -420,9 +422,13 @@
   <div class="wrap">
     <div class="demo-call">
       <div class="tag">O escríbenos</div>
-      <h2 style="margin-top:10px;font-size:clamp(24px,3vw,32px);">Prueba nuestro chatbot ahora</h2>
+      <h2 style="margin-top:10px;font-size:clamp(24px,3vw,32px);">¿Quieres probar el chatbot?</h2>
       <p style="color:var(--text-dim);max-width:480px;margin:14px auto 24px;font-size:16px;">Habla directamente con el asistente de Sortu AI y descubre qué podemos automatizar en tu negocio.</p>
-      <div class="chat-inline">
+      <button id="sortu-chat-toggle" class="btn-primary chat-toggle-btn">
+        <span class="icon">💬</span>
+        <span>Prueba nuestro chatbot</span>
+      </button>
+      <div class="chat-inline" id="sortu-chat-panel" style="display:none;">
         <div class="chat-header"><span class="dot"></span>Asistente Sortu AI</div>
         <div class="chat-messages" id="sortu-chat-messages">
           <div class="chat-msg bot">Hola 👋 Soy el asistente de Sortu AI. Cuéntame, ¿qué te gustaría automatizar?</div>
@@ -472,11 +478,19 @@
 
 <script>
   (function () {
+    var toggleBtn = document.getElementById('sortu-chat-toggle');
+    var panel = document.getElementById('sortu-chat-panel');
     var messages = document.getElementById('sortu-chat-messages');
     var input = document.getElementById('sortu-chat-input');
     var sendBtn = document.getElementById('sortu-chat-send');
     var sessionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
     var sending = false;
+
+    toggleBtn.addEventListener('click', function () {
+      var isOpen = panel.style.display !== 'none';
+      panel.style.display = isOpen ? 'none' : 'flex';
+      if (!isOpen) input.focus();
+    });
 
     function addMessage(text, who) {
       var div = document.createElement('div');
